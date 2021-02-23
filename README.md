@@ -11,8 +11,18 @@ The goal of the stendarr project is to provide an open source video surveillance
 Install motionEyeOS as described on the [motionEyeOS wiki](https://github.com/ccrisan/motioneyeos/wiki/Installation)
 
 ## Cameras
-Install Housecarl
-TODO
+In this section we assume you are using the same peripherals as us, i.e. the cheapest "made in china" ftdi programmer and ESP32-CAM boards. We also assume that you are using a Windows 10 computer.
+### FTDI and Arduino IDE setup
+* install ftdi [drivers](https://ftdichip.com/drivers/vcp-drivers/) using the windows device manager.
+* Arduino IDE
+  * add this url to the additional board manager URLs : https://dl.espressif.com/dl/package_esp32_index.json
+  * install esp32 in the boards manager
+  * select "AI Thinker ESP32-CAM" board
+### Housecarl upload
+* open [Housecarl](https://github.com/Cyril-Meyer/Stendarr/tree/main/Housecarl) project
+* change the network configuration to suit your local network
+* for each ESP32-CAN you have, change the hostname and IP address (each ESP32-CAM must be unique)
+* upload
 
 # How much does it cost ?
 The price is a very important point for us, we want to offer a solution "as cheap as possible".
