@@ -1,0 +1,3 @@
+[submodule "motioneyeos"]
+	path = motioneyeos
+	url = https://github.com/ccrisan/motioneyeos
