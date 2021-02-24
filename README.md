@@ -20,7 +20,7 @@ In this section we assume you are using the same peripherals as us, i.e. the che
   * select "AI Thinker ESP32-CAM" board
 ### Housecarl upload
 * open [Housecarl](https://github.com/Cyril-Meyer/Stendarr/tree/main/Housecarl) project
-* change the network configuration to suit your local network
+* change the network configuration to suit your local network (configuration.h file)
 * for each ESP32-CAN you have, change the hostname and IP address (each ESP32-CAM must be unique)
 * upload
 
