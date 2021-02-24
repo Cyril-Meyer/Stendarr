@@ -1,26 +1,32 @@
+/* Housecarl
+ * Open Source home security IP cam
+ */
+#define VERSION "1.0"
+
+// Personal configuration
+#include "configuration.h"
+
+// Select camera model
+//#define CAMERA_MODEL_WROVER_KIT
+#define CAMERA_MODEL_AI_THINKER
+
+// Camera pins for selected camera model
+#include "camera_pins.h"
+
+// ESP32 Camera + Wifi
 #include "esp_camera.h"
 #include <WiFi.h>
 
-//
-// WARNING!!! Make sure that you have either selected ESP32 Wrover Module,
-//            or another board which has PSRAM enabled
-//
-
-// Select camera model
-#define CAMERA_MODEL_WROVER_KIT
-//#define CAMERA_MODEL_ESP_EYE
-//#define CAMERA_MODEL_M5STACK_PSRAM
-//#define CAMERA_MODEL_M5STACK_WIDE
-//#define CAMERA_MODEL_AI_THINKER
-
-#include "camera_pins.h"
-
-const char* ssid = "*********";
-const char* password = "*********";
+// Include for brownout detector deactivation
+//#include "soc/soc.h"
+//#include "soc/rtc_cntl_reg.h"
 
 void startCameraServer();
 
 void setup() {
+  // Disable brownout detector
+  // WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0);
+  
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
@@ -46,7 +52,17 @@ void setup() {
   config.pin_reset = RESET_GPIO_NUM;
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
+  
   //init with high specs to pre-allocate larger buffers
+  /*
+   * FRAMESIZE_QVGA (320 x 240)
+   * FRAMESIZE_CIF (352 x 288)
+   * FRAMESIZE_VGA (640 x 480)
+   * FRAMESIZE_SVGA (800 x 600)
+   * FRAMESIZE_XGA (1024 x 768)
+   * FRAMESIZE_SXGA (1280 x 1024)
+   * FRAMESIZE_UXGA (1600 x 1200)
+   */
   if(psramFound()){
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
@@ -56,11 +72,6 @@ void setup() {
     config.jpeg_quality = 12;
     config.fb_count = 1;
   }
-
-#if defined(CAMERA_MODEL_ESP_EYE)
-  pinMode(13, INPUT_PULLUP);
-  pinMode(14, INPUT_PULLUP);
-#endif
 
   // camera init
   esp_err_t err = esp_camera_init(&config);
@@ -79,11 +90,7 @@ void setup() {
   //drop down frame size for higher initial frame rate
   s->set_framesize(s, FRAMESIZE_QVGA);
 
-#if defined(CAMERA_MODEL_M5STACK_WIDE)
-  s->set_vflip(s, 1);
-  s->set_hmirror(s, 1);
-#endif
-
+  WiFi.config(ip, gateway, subnet, primaryDNS, secondaryDNS);
   WiFi.begin(ssid, password);
 
   while (WiFi.status() != WL_CONNECTED) {
@@ -102,5 +109,5 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  delay(10000);
+  delay(1000);
 }
