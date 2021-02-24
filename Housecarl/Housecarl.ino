@@ -53,7 +53,6 @@ void setup() {
   config.xclk_freq_hz = 20000000;
   config.pixel_format = PIXFORMAT_JPEG;
   
-  //init with high specs to pre-allocate larger buffers
   /*
    * FRAMESIZE_QVGA (320 x 240)
    * FRAMESIZE_CIF (352 x 288)
@@ -63,6 +62,8 @@ void setup() {
    * FRAMESIZE_SXGA (1280 x 1024)
    * FRAMESIZE_UXGA (1600 x 1200)
    */
+  
+  //init with high specs to pre-allocate larger buffers
   if(psramFound()){
     config.frame_size = FRAMESIZE_UXGA;
     config.jpeg_quality = 10;
@@ -92,6 +93,7 @@ void setup() {
 
   WiFi.config(ip, gateway, subnet, primaryDNS, secondaryDNS);
   WiFi.begin(ssid, password);
+  WiFi.setHostname(hostname);
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -105,6 +107,8 @@ void setup() {
   Serial.print("Camera Ready! Use 'http://");
   Serial.print(WiFi.localIP());
   Serial.println("' to connect");
+  Serial.print("Hostname ");
+  Serial.println(WiFi.getHostname());
 }
 
 void loop() {
