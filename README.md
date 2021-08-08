@@ -33,3 +33,15 @@ Here is the price of an example configuration with 4 cameras :
   * 4 pcs = 26€
 * FTDI programmer : 4€
 Total = 60€
+
+# Troubleshooting
+* Changing a camera setup (or at least the resolution), will make motionEyeOS stop to receive and process the video.
+  * Restart motionEyeOS will fix the problem
+    * setup a crontab for reboot, e.g. : 00 10 * * * reboot
+
+# Known bugs
+* After a few days, weeks, or months, the cameras seem to stop responding, this is an ongoing issue.
+  * This is also a problem when the camera is "overused", such as during setup or testing.
+  * Overheat ?
+* Option in Housecarl "DCW (Downsize EN)" sometimes reduce resolution, sometimes not.
+  * Housecarl is a slightly modified version of [CameraWebServer](https://github.com/espressif/arduino-esp32/tree/master/libraries/ESP32/examples/Camera/CameraWebServer), maybe it's a already know issue.
