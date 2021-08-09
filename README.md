@@ -45,3 +45,5 @@ Total = 60€
   * This is also a problem when the camera is "overused", such as during setup or testing.
     * Overheat problem ?
   * [d9b2845b04ecbaa721366e679154ba31bebc4820](https://github.com/Cyril-Meyer/Stendarr/commit/d9b2845b04ecbaa721366e679154ba31bebc4820) added a daily reset system, need to see if it works.
+* Sometimes, the camera work (web page and /capture) but motionEyeOS still doesn't get images, even after restart.
+  * TODO ? : add a manual restart button for Housecarl ?
