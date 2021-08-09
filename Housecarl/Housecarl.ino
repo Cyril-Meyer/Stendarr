@@ -6,6 +6,9 @@
 // Personal configuration
 #include "configuration.h"
 
+// EEPROM for resolution configuration save
+#include <EEPROM.h>
+
 // Select camera model
 //#define CAMERA_MODEL_WROVER_KIT
 #define CAMERA_MODEL_AI_THINKER
@@ -18,8 +21,8 @@
 #include <WiFi.h>
 
 // Include for brownout detector deactivation
-//#include "soc/soc.h"
-//#include "soc/rtc_cntl_reg.h"
+// #include "soc/soc.h"
+// #include "soc/rtc_cntl_reg.h"
 
 void startCameraServer();
 
@@ -30,7 +33,7 @@ void setup() {
   Serial.begin(115200);
   Serial.setDebugOutput(true);
   Serial.println();
-
+  
   camera_config_t config;
   config.ledc_channel = LEDC_CHANNEL_0;
   config.ledc_timer = LEDC_TIMER_0;
@@ -73,7 +76,7 @@ void setup() {
     config.jpeg_quality = 12;
     config.fb_count = 1;
   }
-
+  
   // camera init
   esp_err_t err = esp_camera_init(&config);
   if (err != ESP_OK) {
@@ -82,15 +85,18 @@ void setup() {
   }
 
   sensor_t * s = esp_camera_sensor_get();
-  //initial sensors are flipped vertically and colors are a bit saturated
-  if (s->id.PID == OV3660_PID) {
-    s->set_vflip(s, 1);//flip it back
-    s->set_brightness(s, 1);//up the blightness just a bit
-    s->set_saturation(s, -2);//lower the saturation
-  }
-  //drop down frame size for higher initial frame rate
-  s->set_framesize(s, FRAMESIZE_QVGA);
 
+  // restore resolution and flip
+  byte framesize, fliph, flipv;
+  EEPROM.begin(8);
+  framesize = EEPROM.read(0);
+  fliph = EEPROM.read(1);
+  flipv = EEPROM.read(2);
+  s->set_framesize(s, (framesize_t)framesize);
+  s->set_hmirror(s, (int)fliph);
+  s->set_vflip(s, (int)flipv);
+  s->set_dcw(s, 0);
+  
   WiFi.config(ip, gateway, subnet, primaryDNS, secondaryDNS);
   WiFi.begin(ssid, password);
   WiFi.setHostname(hostname);
@@ -112,6 +118,10 @@ void setup() {
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
   delay(1000);
+
+  // restart after 24h
+  static int i = 0;
+  if(++i > 86400)
+    ESP.restart();
 }

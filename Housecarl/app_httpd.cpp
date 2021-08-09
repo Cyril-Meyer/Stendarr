@@ -17,6 +17,7 @@
 #include "img_converters.h"
 #include "camera_index.h"
 #include "Arduino.h"
+#include <EEPROM.h>
 
 #include "fb_gfx.h"
 #include "fd_forward.h"
@@ -487,6 +488,9 @@ static esp_err_t cmd_handler(httpd_req_t *req){
 
     if(!strcmp(variable, "framesize")) {
         if(s->pixformat == PIXFORMAT_JPEG) res = s->set_framesize(s, (framesize_t)val);
+        s->set_dcw(s, 0);
+        EEPROM.write(0, (byte)val);
+        EEPROM.commit();
     }
     else if(!strcmp(variable, "quality")) res = s->set_quality(s, val);
     else if(!strcmp(variable, "contrast")) res = s->set_contrast(s, val);
@@ -497,8 +501,16 @@ static esp_err_t cmd_handler(httpd_req_t *req){
     else if(!strcmp(variable, "awb")) res = s->set_whitebal(s, val);
     else if(!strcmp(variable, "agc")) res = s->set_gain_ctrl(s, val);
     else if(!strcmp(variable, "aec")) res = s->set_exposure_ctrl(s, val);
-    else if(!strcmp(variable, "hmirror")) res = s->set_hmirror(s, val);
-    else if(!strcmp(variable, "vflip")) res = s->set_vflip(s, val);
+    else if(!strcmp(variable, "hmirror")) {
+      res = s->set_hmirror(s, val);
+      EEPROM.write(1, (byte)val);
+      EEPROM.commit();
+    }
+    else if(!strcmp(variable, "vflip")) {
+      res = s->set_vflip(s, val);
+      EEPROM.write(2, (byte)val);
+      EEPROM.commit();
+    }
     else if(!strcmp(variable, "awb_gain")) res = s->set_awb_gain(s, val);
     else if(!strcmp(variable, "agc_gain")) res = s->set_agc_gain(s, val);
     else if(!strcmp(variable, "aec_value")) res = s->set_aec_value(s, val);
