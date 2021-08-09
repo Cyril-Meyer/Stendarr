@@ -16,7 +16,8 @@ In this section we assume you are using the same peripherals as us, i.e. the che
 * install ftdi [drivers](https://ftdichip.com/drivers/vcp-drivers/) using the windows device manager.
 * Arduino IDE
   * add this url to the additional board manager URLs : https://dl.espressif.com/dl/package_esp32_index.json
-  * install esp32 in the boards manager
+  * install esp32 **1.0.4** in the boards manager 
+    * if problem with resolution : check version, 1.0.5 and 1.0.6 have issues.
   * select "AI Thinker ESP32-CAM" board
 ### Housecarl upload
 * open [Housecarl](https://github.com/Cyril-Meyer/Stendarr/tree/main/Housecarl) project

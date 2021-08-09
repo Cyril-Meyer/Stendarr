@@ -92,10 +92,10 @@ void setup() {
   framesize = EEPROM.read(0);
   fliph = EEPROM.read(1);
   flipv = EEPROM.read(2);
+  s->set_dcw(s, 0);
   s->set_framesize(s, (framesize_t)framesize);
   s->set_hmirror(s, (int)fliph);
   s->set_vflip(s, (int)flipv);
-  s->set_dcw(s, 0);
   
   WiFi.config(ip, gateway, subnet, primaryDNS, secondaryDNS);
   WiFi.begin(ssid, password);
